@@ -1,5 +1,5 @@
 # SOC Triage Assistant (n8n + VirusTotal)
-An AI Agent I built with n8n that can look up domains and IP addresses using VirusTotal and then generate a SOC report on them.
+An AI SOC agent built with n8n that enriches IP addresses and domains with VirusTotal and automatically generates structured SOC reports.
 
 **Overview**
 
