@@ -1,0 +1,168 @@
+{
+  "name": "AI SOC Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "81a2cc3a-3a61-4248-b4d7-f6e6aa0d68e1",
+      "name": "When chat message received",
+      "webhookId": "4f584360-5614-46c6-a11f-f8b17f131037"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        224
+      ],
+      "id": "dd96f1c9-8db7-4548-be95-a8df9cc7c334",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "KKcTtjDqoIDXuHoK",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant that communicates with VirusTotal and is knowledgeable on SOC matters such as writing reports\n\nYou will be given either a domain or ip address to look up using VirusTotal\n\nIf it is an IP address, extract the ip address from the message and pass it as {ip}\n\nIf it is a domain, extract the domain and pass it as {domain}\n\nOnce you receive the information you generate a 200 word SOC-style report on the information gathered."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "b0a8ac60-546c-43fd-bf83-fed268f8e886",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to look up an IP address in VirusTotal. The input ip should be a valid IPv4 or IPv6 address. You get the ip from the user prompt",
+        "url": "=https://www.virustotal.com/api/v3/ip_addresses/{{$fromAI(\"ip\")}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Apikey",
+              "value": "{{API key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        224
+      ],
+      "id": "5a0c1f60-9b84-45cb-ab2d-2f24b589774e",
+      "name": "IP VirusTotal Node"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Use this tool to look up domains in VirusTotal. The input ip should domain should be a valid one.",
+        "url": "=https://www.virustotal.com/api/v3/domains/{{$fromAI(\"domain\")}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Apikey",
+              "value": "{{API key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        640,
+        224
+      ],
+      "id": "8505c7fa-091b-494c-a7ab-2eaee2ae167e",
+      "name": "Domain VIrusTotal Node"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IP VirusTotal Node": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Domain VIrusTotal Node": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "a76c09ae-831e-4a95-9204-c559083d11a3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "991d76a6154647ffe4ff46c6154ae497b20c61d8d29f1f3e4fc661452ec90c0a"
+  },
+  "nodeGroups": [],
+  "id": "82hH9MzyJcFmpf1U",
+  "tags": []
+}
