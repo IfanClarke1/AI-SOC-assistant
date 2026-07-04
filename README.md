@@ -1,4 +1,4 @@
-# AI-SOC-assistant
+# SOC Triage Assistant (n8n + VirusTotal)
 An AI Agent I built with n8n that can look up domains and IP addresses using VirusTotal and then generate a SOC report on them.
 
 **Overview**
@@ -13,10 +13,10 @@ This workflow allows a user to submit an IP address or domain via chat. The AI a
 It is designed as a lightweight security enrichment and reporting assistant for learning, automation, or SOC lab environments.
 
 **Features**
-1. Chat-based Trigger
-2. AI Agent powered by OpenAI
-3. VirusTotal enrichment for IP addresses and Domains
-4. Automated SOC-style report generation
+* Chat-based Trigger
+* AI Agent powered by OpenAI
+* VirusTotal enrichment for IP addresses and Domains
+* Automated SOC-style report generation
 
 **Architecture**
 
@@ -25,6 +25,14 @@ It is designed as a lightweight security enrichment and reporting assistant for 
 3. VirusTotal IP Tool
 4. VirusTotal Domain Tool
 5. LLM (OpenAI)
+
+**Flow**
+
+* Input: chat message including IP or domain
+* Step 1: n8n receives message, establishes whether it is IP or domain and uses correct VirusTotal API endpoint
+* Step 2: VirusTotal enrichment
+* Step 3: SOC-style report generated with information gathered from VirusTotal
+* Step 4: Decision recommendation
 
 **Example Output**
 
